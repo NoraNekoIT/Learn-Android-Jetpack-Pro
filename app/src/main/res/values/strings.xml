@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Moe App</string>
+    <string name="title_activity_detail_course">Detail</string>
+
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="aired_date">Aired Date</string>
+    <string name="overview">Overview</string>
+
+    <string name="deadline_date">Aired Date %s</string>
+    <string name="share_text">Soon download App Moe %s in MoE.com</string>
+</resources>
