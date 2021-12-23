@@ -1,16 +1,18 @@
 package com.noranekoit.bajp.moe.ui.detail
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.noranekoit.bajp.moe.BuildConfig
 import com.noranekoit.bajp.moe.R
-import com.noranekoit.bajp.moe.data.MovieEntity
+import com.noranekoit.bajp.moe.data.source.local.entity.MovieEntity
 import com.noranekoit.bajp.moe.databinding.ActivityDetailBinding
 import com.noranekoit.bajp.moe.databinding.ContentDetailBinding
-
+import com.noranekoit.bajp.moe.viewmodel.ViewModelFactory
 
 class DetailActivity : AppCompatActivity() {
 
@@ -27,22 +29,32 @@ class DetailActivity : AppCompatActivity() {
         setSupportActionBar(activityDetailBinding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
+        val factory = ViewModelFactory.getInstance()
         val viewModel = ViewModelProvider(
-            this,
-            ViewModelProvider.NewInstanceFactory()
+            this, factory
         )[DetailViewModel::class.java]
 
         val extras = intent.extras
         if (extras != null) {
-            val movieId = extras.getString(EXTRA_MOVIE)
-            val tvId = extras.getString(EXTRA_TV_SHOW)
+            val movie = extras.getString(EXTRA_MOVIE)
+            val movieId = movie?.toInt()
+            val tv = extras.getString(EXTRA_TV_SHOW)
+            val tvId = tv?.toInt()
             if (movieId != null) {
-                viewModel.setSelectedMovie(movieId)
-                populateMovies(viewModel.getMovies())
+                detailContentBinding.progressBar.visibility = View.VISIBLE
+                viewModel.getMovies(movieId).observe(this, {
+                    detailContentBinding.progressBar.visibility = View.GONE
+                    populateMovies(it)
+                })
+
+
             } else if (tvId != null) {
-                viewModel.setSelectedTvShows(tvId)
-                populateMovies(viewModel.getTvShows())
+                detailContentBinding.progressBar.visibility = View.VISIBLE
+                viewModel.getTvShows(tvId).observe(this, {
+                    detailContentBinding.progressBar.visibility = View.GONE
+                    populateMovies(it)
+                })
+
             }
 
         }
@@ -50,23 +62,23 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun populateMovies(movieEntity: MovieEntity) {
-        detailContentBinding.apply {
-            textTitle.text = movieEntity.title
-            textDate.text = resources.getString(R.string.deadline_date, movieEntity.dateAiring)
-            textDescription.text = movieEntity.description
-            scoreUser.text = movieEntity.score
+        movieEntity.apply {
+            detailContentBinding.apply {
+                textTitle.text = movieEntity.title
+                textDescription.text = movieEntity.description
+                textDate.text = resources.getString(R.string.deadline_date, movieEntity.dateAiring)
+                scoreUser.text = movieEntity.score
+                Glide.with(this@DetailActivity)
+                    .load("${BuildConfig.BASE_URL_IMAGE}${movieEntity.imagePath}")
+                    .transform(RoundedCorners(20))
+                    .apply(
+                        RequestOptions.placeholderOf(R.drawable.ic_loading)
+                            .error(R.drawable.ic_error)
+                    )
+                    .into(detailContentBinding.imagePoster)
+            }
         }
 
-        resources.getString(R.string.deadline_date, movieEntity.dateAiring)
-
-        Glide.with(this)
-            .load(movieEntity.imagePath)
-            .transform(RoundedCorners(20))
-            .apply(
-                RequestOptions.placeholderOf(R.drawable.ic_loading)
-                    .error(R.drawable.ic_error)
-            )
-            .into(detailContentBinding.imagePoster)
     }
 
     companion object {

@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.noranekoit.bajp.moe.BuildConfig
 import com.noranekoit.bajp.moe.R
-import com.noranekoit.bajp.moe.data.MovieEntity
+import com.noranekoit.bajp.moe.data.source.local.entity.MovieEntity
 import com.noranekoit.bajp.moe.databinding.ItemsMovieBinding
 import com.noranekoit.bajp.moe.ui.detail.DetailActivity
+import java.util.*
 
 
 class MovieAdapter(private val callback: MovieFragmentCallback) :
@@ -20,8 +22,8 @@ class MovieAdapter(private val callback: MovieFragmentCallback) :
         if (movies == null) return
         this.listMovies.clear()
         this.listMovies.addAll(movies)
+        notifyDataSetChanged()
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val itemsHomeBinding =
@@ -29,10 +31,9 @@ class MovieAdapter(private val callback: MovieFragmentCallback) :
         return MovieViewHolder(itemsHomeBinding)
     }
 
-    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        val movie = listMovies[position]
-        holder.bind(movie)
-    }
+    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) =
+        holder.bind(listMovies[position])
+
 
     override fun getItemCount(): Int = listMovies.size
 
@@ -52,7 +53,7 @@ class MovieAdapter(private val callback: MovieFragmentCallback) :
                 imgShareMovie.setOnClickListener { callback.onShareClick(movie) }
 
                 Glide.with(itemView.context)
-                    .load(movie.imagePath)
+                    .load("${BuildConfig.BASE_URL_IMAGE}${movie.imagePath}")
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_loading)
                             .error(R.drawable.ic_error)

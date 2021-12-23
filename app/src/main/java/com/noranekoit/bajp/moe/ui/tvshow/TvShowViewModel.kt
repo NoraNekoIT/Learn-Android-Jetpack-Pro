@@ -1,10 +1,10 @@
 package com.noranekoit.bajp.moe.ui.tvshow
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.noranekoit.bajp.moe.data.MovieEntity
-import com.noranekoit.bajp.moe.utils.DataDummy
+import com.noranekoit.bajp.moe.data.source.local.entity.MovieEntity
+import com.noranekoit.bajp.moe.data.source.remote.MovieRepository
 
-class TvShowViewModel : ViewModel() {
-
-    fun getTvShows(): List<MovieEntity> = DataDummy.generateDummyTvShow()
+class TvShowViewModel(private val movieRepository: MovieRepository) : ViewModel() {
+    fun getTvShows(): LiveData<List<MovieEntity>> = movieRepository.getAllTvShowPopulars()
 }

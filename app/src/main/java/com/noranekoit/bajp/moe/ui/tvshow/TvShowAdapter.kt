@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.noranekoit.bajp.moe.BuildConfig
 import com.noranekoit.bajp.moe.R
-import com.noranekoit.bajp.moe.data.MovieEntity
+import com.noranekoit.bajp.moe.data.source.local.entity.MovieEntity
 import com.noranekoit.bajp.moe.databinding.ItemsTvShowBinding
 import com.noranekoit.bajp.moe.ui.detail.DetailActivity
 
@@ -19,6 +20,7 @@ class TvShowAdapter(private val callback: TvShowFragmentCallback) :
         if (tvShows == null) return
         this.listTvShows.clear()
         this.listTvShows.addAll(tvShows)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {
@@ -27,10 +29,9 @@ class TvShowAdapter(private val callback: TvShowFragmentCallback) :
         return TvShowViewHolder(itemsTvShowBinding)
     }
 
-    override fun onBindViewHolder(holder: TvShowViewHolder, position: Int) {
-        val tvShow = listTvShows[position]
-        holder.bind(tvShow)
-    }
+    override fun onBindViewHolder(holder: TvShowViewHolder, position: Int) =
+        holder.bind(listTvShows[position])
+
 
     override fun getItemCount(): Int = listTvShows.size
 
@@ -47,8 +48,9 @@ class TvShowAdapter(private val callback: TvShowFragmentCallback) :
                     itemView.context.startActivity(intent)
                 }
                 imgShare.setOnClickListener { callback.onShareClick(tvShows) }
+
                 Glide.with(itemView.context)
-                    .load(tvShows.imagePath)
+                    .load("${BuildConfig.BASE_URL_IMAGE}${tvShows.imagePath}")
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_loading)
                             .error(R.drawable.ic_error)
@@ -57,4 +59,6 @@ class TvShowAdapter(private val callback: TvShowFragmentCallback) :
             }
         }
     }
+
+
 }

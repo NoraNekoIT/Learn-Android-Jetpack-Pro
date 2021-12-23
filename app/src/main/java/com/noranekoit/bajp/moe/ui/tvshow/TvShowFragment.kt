@@ -5,26 +5,26 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ShareCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.noranekoit.bajp.moe.R
-import com.noranekoit.bajp.moe.data.MovieEntity
+import com.noranekoit.bajp.moe.data.source.local.entity.MovieEntity
 import com.noranekoit.bajp.moe.databinding.FragmentTvShowBinding
+import com.noranekoit.bajp.moe.viewmodel.ViewModelFactory
 
 class TvShowFragment : Fragment(), TvShowFragmentCallback {
     private var _fragmentTvShowBinding: FragmentTvShowBinding? = null
-    private val fragmentTvShowBinding get() = _fragmentTvShowBinding!!
-
-
+    private val fragmentTvShowBinding get() = _fragmentTvShowBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): ConstraintLayout? {
 
         _fragmentTvShowBinding = FragmentTvShowBinding.inflate(inflater, container, false)
-        return fragmentTvShowBinding.root
+        return fragmentTvShowBinding?.root
     }
 
     override fun onDestroyView() {
@@ -36,17 +36,25 @@ class TvShowFragment : Fragment(), TvShowFragmentCallback {
         super.onViewCreated(view, savedInstanceState)
 
         if (activity != null) {
+            val factory = ViewModelFactory.getInstance()
             val viewModel = ViewModelProvider(
-                this,
-                ViewModelProvider.NewInstanceFactory()
+                this,factory
             )[TvShowViewModel::class.java]
-            val tvShows = viewModel.getTvShows()
-            val adapter = TvShowAdapter(this)
-            adapter.setTvShows(tvShows)
-            with(fragmentTvShowBinding.rvTvShow) {
-                layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
-                this.adapter = adapter
+
+            val adapter = TvShowAdapter(this@TvShowFragment)
+
+            fragmentTvShowBinding?.progressBar?.visibility = View.VISIBLE
+            viewModel.getTvShows().observe(viewLifecycleOwner, {
+                fragmentTvShowBinding?.progressBar?.visibility =View.GONE
+                adapter.setTvShows(it)
+            })
+
+            fragmentTvShowBinding?.let {
+                with(it.rvTvShow) {
+                    layoutManager = LinearLayoutManager(context)
+                    setHasFixedSize(true)
+                    this.adapter = adapter
+                }
             }
         }
     }
