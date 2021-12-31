@@ -32,6 +32,10 @@ ext {
     okhttp3Version= '4.9.0'
     mockitoInlineVersion='3.6.0'
 
+    roomVersion = '2.2.3'
+    roomRuntimeVersion = '2.4.0'
+    pagingVersion = '2.1.1'
+
     splashScreenVersion ='1.0.0-alpha02'
     viewPager2Version= '1.0.0'
     materialVersion = '1.4.0'

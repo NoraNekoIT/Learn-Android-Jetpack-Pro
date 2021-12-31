@@ -1,20 +1,20 @@
-package com.noranekoit.bajp.moe.data.source.remote
+package com.noranekoit.bajp.moe.data.source
 
 import androidx.lifecycle.LiveData
+
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.noranekoit.bajp.moe.data.source.MovieDataSource
-import com.noranekoit.bajp.moe.data.source.NetworkBoundResource
+import com.noranekoit.bajp.moe.vo.Resource
 import com.noranekoit.bajp.moe.data.source.local.LocalDataSource
-import com.noranekoit.bajp.moe.data.source.remote.response.movie.MovieResponse
 import com.noranekoit.bajp.moe.data.source.remote.response.tvshow.TvShowResponse
 import com.noranekoit.bajp.moe.data.source.local.entity.MovieEntity
 import com.noranekoit.bajp.moe.data.source.local.entity.TvEntity
+import com.noranekoit.bajp.moe.data.source.remote.ApiResponse
 import com.noranekoit.bajp.moe.data.source.remote.response.RemoteDataSource
+import com.noranekoit.bajp.moe.data.source.remote.response.movie.MovieResponse
 import com.noranekoit.bajp.moe.utils.AppExecutors
-import com.noranekoit.bajp.moe.vo.Resource
 
-class FakeMovieRepository constructor(
+class MovieRepository private constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
     private val appExecutors: AppExecutors
@@ -133,4 +133,22 @@ class FakeMovieRepository constructor(
 
     override fun getTvShowDetail(tvShowId: Int): LiveData<TvEntity> =
         localDataSource.getTvShowDetails(tvShowId)
+
+    companion object {
+        @Volatile
+        private var instance: MovieRepository? = null
+
+        fun getInstance(
+            remoteDataSource: RemoteDataSource,
+            localData: LocalDataSource,
+            appExecutors: AppExecutors
+        ): MovieRepository =
+            instance ?: synchronized(this) {
+                instance ?: MovieRepository(
+                    remoteDataSource,
+                    localData,
+                    appExecutors
+                ).apply { instance = this }
+            }
+    }
 }

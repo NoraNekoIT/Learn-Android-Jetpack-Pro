@@ -48,7 +48,6 @@ dependencies {
 
 
     implementation "androidx.core:core-ktx:$coreVersion"
-
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
@@ -65,9 +64,14 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3Version"
 
-    testImplementation "org.mockito:mockito-inline:$mockitoInlineVersion"
+    implementation "androidx.room:room-runtime:$roomRuntimeVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
+
+
     testImplementation "androidx.arch.core:core-testing:$androidCoreTestVersion"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
+    testImplementation "org.mockito:mockito-inline:$mockitoInlineVersion"
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "junit:junit:$junitVersion"
 
@@ -75,6 +79,5 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
     androidTestImplementation "androidx.test:rules:$androidXTestVersion"
     androidTestImplementation "androidx.test:runner:$androidXTestVersion"
-
 
 }

@@ -1,4 +1,4 @@
-package com.noranekoit.bajp.moe.ui.tvshow
+package com.noranekoit.bajp.moe.ui.favorite
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -12,40 +12,26 @@ import com.bumptech.glide.request.RequestOptions
 import com.noranekoit.bajp.moe.BuildConfig
 import com.noranekoit.bajp.moe.R
 import com.noranekoit.bajp.moe.data.source.local.entity.TvEntity
-import com.noranekoit.bajp.moe.databinding.ItemsTvShowBinding
+import com.noranekoit.bajp.moe.databinding.ItemFavoriteBinding
 import com.noranekoit.bajp.moe.ui.detail.DetailActivity
 
-class TvShowAdapter(private val callback: TvShowFragmentCallback) :
-    PagedListAdapter<TvEntity, TvShowAdapter.TvShowViewHolder>(DIFF_CALLBACK) {
+class FavoriteTvShowAdapter(private val callback: FavoriteTvFragmentCallback) :
+    PagedListAdapter<TvEntity, FavoriteTvShowAdapter.FavoriteViewHolder>(DIFF_CALLBACK) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {
-        val itemsTvShowBinding =
-            ItemsTvShowBinding.inflate(LayoutInflater.from(parent.context), parent,
-                false)
-        return TvShowViewHolder(itemsTvShowBinding)
-    }
-
-    override fun onBindViewHolder(holder: TvShowViewHolder, position: Int) {
-        val tvShow = getItem(position)
-        if (tvShow != null) {
-            holder.bind(tvShow)
-        }
-    }
-
-    inner class TvShowViewHolder(private val binding: ItemsTvShowBinding) :
+    inner class FavoriteViewHolder(private val binding: ItemFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(tvShows: TvEntity) {
+        fun bind(tvShow: TvEntity) {
             with(binding) {
-                tvItemTitle.text = tvShows.title
+                tvItemTitle.text = tvShow.title
                 tvItemDate.text =
-                    itemView.resources.getString(R.string.deadline_date, tvShows.dateAiring)
+                    itemView.resources.getString(R.string.deadline_date, tvShow.dateAiring)
                 itemView.setOnClickListener {
                     val intent = Intent(itemView.context, DetailActivity::class.java)
-                    intent.putExtra(DetailActivity.EXTRA_TV_SHOW, tvShows.id)
+                    intent.putExtra(DetailActivity.EXTRA_TV_SHOW, tvShow.id)
                     itemView.context.startActivity(intent)
                 }
-                imgShare.setOnClickListener { callback.onShareClick(tvShows) }
-                tvShows.imagePath?.let {
+                imgShareMovie.setOnClickListener { callback.onShareClick(tvShow) }
+                tvShow.imagePath?.let {
                     imgPoster.loadImage("${BuildConfig.BASE_URL_IMAGE}${it}")
                 }
 
@@ -58,11 +44,25 @@ class TvShowAdapter(private val callback: TvShowFragmentCallback) :
             .load(url)
             .apply(
                 RequestOptions.placeholderOf(R.drawable.ic_loading)
-                .override(500, 500)
-                .error(R.drawable.ic_error)
+                    .override(500, 500)
+                    .error(R.drawable.ic_error)
             )
             .centerCrop()
             .into(this)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
+        val itemFavoriteBinding =
+            ItemFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return FavoriteViewHolder(itemFavoriteBinding)
+    }
+
+    override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
+        val tv = getItem(position)
+        if (tv != null) {
+            holder.bind(tv)
+        }
+
     }
 
     companion object {

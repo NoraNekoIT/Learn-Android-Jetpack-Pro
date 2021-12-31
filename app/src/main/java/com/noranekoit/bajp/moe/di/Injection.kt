@@ -1,10 +1,16 @@
 package com.noranekoit.bajp.moe.di
-import com.noranekoit.bajp.moe.data.source.remote.MovieRepository
-import com.noranekoit.bajp.moe.data.source.remote.RemoteDataSource
-
+import android.content.Context
+import com.noranekoit.bajp.moe.data.source.MovieRepository
+import com.noranekoit.bajp.moe.data.source.local.LocalDataSource
+import com.noranekoit.bajp.moe.data.source.local.room.MovieDatabase
+import com.noranekoit.bajp.moe.data.source.remote.response.RemoteDataSource
+import com.noranekoit.bajp.moe.utils.AppExecutors
 object Injection {
-    fun provideMovieRepository(): MovieRepository {
+    fun provideMovieRepository(context: Context): MovieRepository {
+        val database = MovieDatabase.getInstance(context)
         val remoteDataSource = RemoteDataSource.getInstance()
-        return MovieRepository.getInstance(remoteDataSource)
+        val localDataSource = LocalDataSource.getInstance(database.movieDao())
+        val appExecutors = AppExecutors()
+        return MovieRepository.getInstance(remoteDataSource,localDataSource,appExecutors)
     }
 }

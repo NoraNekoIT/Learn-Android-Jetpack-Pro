@@ -1,8 +1,10 @@
 package com.noranekoit.bajp.moe.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.noranekoit.bajp.moe.data.source.remote.MovieRepository
+import com.noranekoit.bajp.moe.ui.favorite.FavoriteViewModel
+import com.noranekoit.bajp.moe.data.source.MovieRepository
 import com.noranekoit.bajp.moe.di.Injection
 import com.noranekoit.bajp.moe.ui.detail.DetailViewModel
 import com.noranekoit.bajp.moe.ui.movie.MovieViewModel
@@ -23,6 +25,9 @@ class ViewModelFactory private constructor(private val mMovieRepository: MovieRe
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(mMovieRepository) as T
             }
+            modelClass.isAssignableFrom(FavoriteViewModel::class.java) -> {
+                FavoriteViewModel(mMovieRepository) as T
+            }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }
     }
@@ -31,11 +36,12 @@ class ViewModelFactory private constructor(private val mMovieRepository: MovieRe
         @Volatile
         private var instance: ViewModelFactory? = null
 
-        fun getInstance(): ViewModelFactory =
+        fun getInstance(context: Context): ViewModelFactory =
             instance ?: synchronized(this) {
-                ViewModelFactory(Injection.provideMovieRepository()).apply {
+                ViewModelFactory(Injection.provideMovieRepository(context)).apply {
                     instance = this
                 }
             }
     }
+
 }

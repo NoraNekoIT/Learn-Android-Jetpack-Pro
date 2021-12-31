@@ -20,6 +20,17 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
+    <TextView
+        android:id="@+id/error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="60dp"
+        android:text="@string/error"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyle"
@@ -29,8 +40,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:visibility="gone"
         android:paddingTop="40dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@android:color/white"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

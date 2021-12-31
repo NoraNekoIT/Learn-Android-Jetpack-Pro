@@ -1,8 +1,6 @@
-package com.noranekoit.bajp.moe.ui.movie
-
+package com.noranekoit.bajp.moe.ui.favorite
 
 import android.content.Intent
-import android.provider.SyncStateContract
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -14,31 +12,13 @@ import com.bumptech.glide.request.RequestOptions
 import com.noranekoit.bajp.moe.BuildConfig
 import com.noranekoit.bajp.moe.R
 import com.noranekoit.bajp.moe.data.source.local.entity.MovieEntity
-import com.noranekoit.bajp.moe.databinding.ItemsMovieBinding
+import com.noranekoit.bajp.moe.databinding.ItemFavoriteBinding
 import com.noranekoit.bajp.moe.ui.detail.DetailActivity
-import java.lang.System.load
 
+class FavoriteMovieAdapter(private val callback: FavoriteMovieFragmentCallback) :
+    PagedListAdapter<MovieEntity, FavoriteMovieAdapter.FavoriteViewHolder>(DIFF_CALLBACK) {
 
-class MovieAdapter(private val callback: MovieFragmentCallback) :
-    PagedListAdapter<MovieEntity, MovieAdapter.MovieViewHolder>(DIFF_CALLBACK) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val itemsHomeBinding = ItemsMovieBinding.inflate(
-            LayoutInflater.from(parent.context), parent,
-            false
-        )
-        return MovieViewHolder(itemsHomeBinding)
-    }
-
-    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        val movie = getItem(position)
-        if (movie != null) {
-            holder.bind(movie)
-        }
-
-    }
-
-    inner class MovieViewHolder(private val binding: ItemsMovieBinding) :
+    inner class FavoriteViewHolder(private val binding: ItemFavoriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(movie: MovieEntity) {
             with(binding) {
@@ -61,12 +41,28 @@ class MovieAdapter(private val callback: MovieFragmentCallback) :
     private fun ImageView.loadImage(url: String?) {
         Glide.with(this.context)
             .load(url)
-            .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
-                .override(500, 500)
-                .error(R.drawable.ic_error)
+            .apply(
+                RequestOptions.placeholderOf(R.drawable.ic_loading)
+                    .override(500, 500)
+                    .error(R.drawable.ic_error)
             )
             .centerCrop()
             .into(this)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
+        val itemFavoriteBinding =
+            ItemFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent,
+                false)
+        return FavoriteViewHolder(itemFavoriteBinding)
+    }
+
+
+    override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
+        val movie = getItem(position)
+        if (movie != null) {
+            holder.bind(movie)
+        }
     }
 
     companion object {

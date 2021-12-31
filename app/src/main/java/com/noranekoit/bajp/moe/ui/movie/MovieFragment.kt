@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.noranekoit.bajp.moe.R
 import com.noranekoit.bajp.moe.data.source.local.entity.MovieEntity
-
 import com.noranekoit.bajp.moe.databinding.FragmentMovieBinding
 import com.noranekoit.bajp.moe.viewmodel.ViewModelFactory
+import com.noranekoit.bajp.moe.vo.Status
 
 class MovieFragment : Fragment(), MovieFragmentCallback {
     private var _fragmentMovieBinding: FragmentMovieBinding? = null
@@ -23,7 +23,8 @@ class MovieFragment : Fragment(), MovieFragmentCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): ConstraintLayout? {
-        _fragmentMovieBinding = FragmentMovieBinding.inflate(inflater, container, false)
+        _fragmentMovieBinding = FragmentMovieBinding.inflate(inflater, container,
+            false)
         return fragmentMovieBinding?.root
     }
 
@@ -36,25 +37,35 @@ class MovieFragment : Fragment(), MovieFragmentCallback {
         super.onViewCreated(view, savedInstanceState)
 
         if (activity != null) {
-            val factory = ViewModelFactory.getInstance()
-            val viewModel = ViewModelProvider(
-                this, factory
-            )[MovieViewModel::class.java]
+            val factory = ViewModelFactory.getInstance(requireActivity())
+            val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
 
             val movieAdapter = MovieAdapter(this)
-            fragmentMovieBinding?.progressBar?.visibility = View.VISIBLE
+            viewModel.getMovies().observe(viewLifecycleOwner, { movies ->
+                if (movies != null) {
+                    when (movies.status) {
+                        Status.LOADING -> {
+                            fragmentMovieBinding?.progressBar?.visibility = View.VISIBLE
+                            fragmentMovieBinding?.error?.visibility = View.GONE
+                        }
+                        Status.SUCCESS -> {
+                            fragmentMovieBinding?.error?.visibility = View.GONE
+                            fragmentMovieBinding?.progressBar?.visibility = View.GONE
+                            movieAdapter.submitList(movies.data)
 
-            viewModel.getMovies().observe(viewLifecycleOwner, {
-                fragmentMovieBinding?.progressBar?.visibility = View.GONE
-                movieAdapter.setMovies(it)
-            })
-
-            fragmentMovieBinding?.let {
-                with(it.rvMovie) {
-                    layoutManager = LinearLayoutManager(context)
-                    setHasFixedSize(true)
-                    adapter = movieAdapter
+                        }
+                        Status.ERROR -> {
+                            fragmentMovieBinding?.progressBar?.visibility = View.GONE
+                            fragmentMovieBinding?.error?.visibility = View.VISIBLE
+                        }
+                    }
                 }
+
+            })
+            with(fragmentMovieBinding?.rvMovie) {
+                this?.layoutManager = LinearLayoutManager(context)
+                this?.setHasFixedSize(true)
+                this?.adapter = movieAdapter
             }
         }
     }

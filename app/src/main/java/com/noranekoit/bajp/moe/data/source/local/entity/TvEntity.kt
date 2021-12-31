@@ -5,11 +5,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "movieEntities")
-data class MovieEntity(
+@Entity(tableName = "tvEntities")
+data class TvEntity(
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = "movieId")
+    @ColumnInfo(name = "tvId")
     val id: String,
 
     @ColumnInfo(name = "title")

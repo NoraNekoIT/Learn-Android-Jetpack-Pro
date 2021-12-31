@@ -22,7 +22,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="200dp"
                 android:contentDescription="@string/app_name"
                 android:scaleType="fitCenter"
                 android:src="@drawable/bg_front"

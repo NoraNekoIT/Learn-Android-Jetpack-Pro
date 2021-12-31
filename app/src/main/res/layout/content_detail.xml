@@ -99,9 +99,24 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:visibility="gone"
+        android:indeterminate="true"
+        android:indeterminateTint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="@+id/text_desc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/text_desc"
         app:layout_constraintTop_toTopOf="@+id/text_desc"
         tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/btn_favorite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:clickable="true"
+        android:focusable="true"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_description" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,9 +10,10 @@ import androidx.core.app.ShareCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.noranekoit.bajp.moe.R
-import com.noranekoit.bajp.moe.data.source.local.entity.MovieEntity
+import com.noranekoit.bajp.moe.data.source.local.entity.TvEntity
 import com.noranekoit.bajp.moe.databinding.FragmentTvShowBinding
 import com.noranekoit.bajp.moe.viewmodel.ViewModelFactory
+import com.noranekoit.bajp.moe.vo.Status
 
 class TvShowFragment : Fragment(), TvShowFragmentCallback {
     private var _fragmentTvShowBinding: FragmentTvShowBinding? = null
@@ -23,7 +24,8 @@ class TvShowFragment : Fragment(), TvShowFragmentCallback {
         savedInstanceState: Bundle?
     ): ConstraintLayout? {
 
-        _fragmentTvShowBinding = FragmentTvShowBinding.inflate(inflater, container, false)
+        _fragmentTvShowBinding = FragmentTvShowBinding.inflate(inflater, container,
+            false)
         return fragmentTvShowBinding?.root
     }
 
@@ -36,30 +38,45 @@ class TvShowFragment : Fragment(), TvShowFragmentCallback {
         super.onViewCreated(view, savedInstanceState)
 
         if (activity != null) {
-            val factory = ViewModelFactory.getInstance()
+            val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModel = ViewModelProvider(
-                this,factory
+                this,
+                factory
             )[TvShowViewModel::class.java]
 
-            val adapter = TvShowAdapter(this@TvShowFragment)
+            val adapter = TvShowAdapter(this)
 
-            fragmentTvShowBinding?.progressBar?.visibility = View.VISIBLE
-            viewModel.getTvShows().observe(viewLifecycleOwner, {
-                fragmentTvShowBinding?.progressBar?.visibility =View.GONE
-                adapter.setTvShows(it)
+            viewModel.getTvShows().observe(viewLifecycleOwner, { tvShows ->
+                if (tvShows != null) {
+                    when (tvShows.status) {
+                        Status.LOADING -> {
+                            fragmentTvShowBinding?.progressBar?.visibility = View.VISIBLE
+                            fragmentTvShowBinding?.error?.visibility = View.GONE
+                        }
+                        Status.SUCCESS -> {
+                            fragmentTvShowBinding?.progressBar?.visibility = View.GONE
+                            fragmentTvShowBinding?.error?.visibility = View.GONE
+                            adapter.submitList(tvShows.data)
+
+                        }
+                        Status.ERROR -> {
+                            fragmentTvShowBinding?.progressBar?.visibility = View.GONE
+                            fragmentTvShowBinding?.error?.visibility = View.VISIBLE
+                        }
+                    }
+                }
+
             })
 
-            fragmentTvShowBinding?.let {
-                with(it.rvTvShow) {
-                    layoutManager = LinearLayoutManager(context)
-                    setHasFixedSize(true)
-                    this.adapter = adapter
-                }
+            with(fragmentTvShowBinding?.rvTvShow) {
+                this?.layoutManager = LinearLayoutManager(context)
+                this?.setHasFixedSize(true)
+                this?.adapter = adapter
             }
         }
     }
 
-    override fun onShareClick(tvShows: MovieEntity) {
+    override fun onShareClick(tvShows: TvEntity) {
         if (activity != null) {
             val mimeType = "text/plain"
             ShareCompat.IntentBuilder(requireActivity())

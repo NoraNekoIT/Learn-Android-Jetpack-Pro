@@ -2,6 +2,7 @@ package com.noranekoit.bajp.moe.ui.detail
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -10,6 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.noranekoit.bajp.moe.BuildConfig
 import com.noranekoit.bajp.moe.R
 import com.noranekoit.bajp.moe.data.source.local.entity.MovieEntity
+import com.noranekoit.bajp.moe.data.source.local.entity.TvEntity
 import com.noranekoit.bajp.moe.databinding.ActivityDetailBinding
 import com.noranekoit.bajp.moe.databinding.ContentDetailBinding
 import com.noranekoit.bajp.moe.viewmodel.ViewModelFactory
@@ -29,7 +31,7 @@ class DetailActivity : AppCompatActivity() {
         setSupportActionBar(activityDetailBinding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val factory = ViewModelFactory.getInstance()
+        val factory = ViewModelFactory.getInstance(this)
         val viewModel = ViewModelProvider(
             this, factory
         )[DetailViewModel::class.java]
@@ -45,20 +47,59 @@ class DetailActivity : AppCompatActivity() {
                 viewModel.getMovies(movieId).observe(this, {
                     detailContentBinding.progressBar.visibility = View.GONE
                     populateMovies(it)
-                })
-
-
+                    setButtonFavorite(it,null)
+                }
+                )
             } else if (tvId != null) {
                 detailContentBinding.progressBar.visibility = View.VISIBLE
                 viewModel.getTvShows(tvId).observe(this, {
                     detailContentBinding.progressBar.visibility = View.GONE
-                    populateMovies(it)
+                    populateTvShows(it)
+                    setButtonFavorite(null,it)
                 })
-
             }
-
         }
 
+    }
+
+    private fun setButtonFavorite(movie: MovieEntity?, tvShow: TvEntity?) {
+        detailContentBinding.btnFavorite.setOnClickListener {
+            setBookmark(movie, tvShow)
+        }
+    }
+
+    private fun showToast(msg: String){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setBookmark(movie: MovieEntity?, tvShow: TvEntity?) {
+        val factory = ViewModelFactory.getInstance(this)
+        val viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
+        if (movie != null) {
+            if (movie.favorite) {
+                showToast("Deleted From Favorite Movie!")
+            } else {
+                showToast("Added To Favorite Movie!")
+            }
+            viewModel.setFavoriteMovie(movie)
+        } else {
+            if (tvShow != null) {
+                if (tvShow.favorite) {
+                    showToast("Deleted From Favorite Tv Show!")
+                } else {
+                    showToast("Added To Favorite Tv Show!")
+                }
+                viewModel.setFavoriteTvShow(tvShow)
+            }
+        }
+    }
+
+    private fun setBookmarkState(state: Boolean) {
+        if (state){
+            detailContentBinding.btnFavorite.setText(R.string.un_favorite)
+        }else{
+            detailContentBinding.btnFavorite.setText(R.string.favorite)
+        }
     }
 
     private fun populateMovies(movieEntity: MovieEntity) {
@@ -77,8 +118,28 @@ class DetailActivity : AppCompatActivity() {
                     )
                     .into(detailContentBinding.imagePoster)
             }
+            setBookmarkState(favorite)
         }
+    }
 
+    private fun populateTvShows(tvEntity: TvEntity) {
+        tvEntity.apply {
+            detailContentBinding.apply {
+                textTitle.text = tvEntity.title
+                textDescription.text = tvEntity.description
+                textDate.text = resources.getString(R.string.deadline_date, tvEntity.dateAiring)
+                scoreUser.text = tvEntity.score
+                Glide.with(this@DetailActivity)
+                    .load("${BuildConfig.BASE_URL_IMAGE}${tvEntity.imagePath}")
+                    .transform(RoundedCorners(20))
+                    .apply(
+                        RequestOptions.placeholderOf(R.drawable.ic_loading)
+                            .error(R.drawable.ic_error)
+                    )
+                    .into(detailContentBinding.imagePoster)
+            }
+            setBookmarkState(favorite)
+        }
     }
 
     companion object {
