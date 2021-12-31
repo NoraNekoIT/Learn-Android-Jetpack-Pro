@@ -1,4 +1,8 @@
 # Learn-Android-Jetpack-Pro
+[![noranekoit - Learn-Android-Jetpack-Pro](https://img.shields.io/static/v1?label=noranekoit&message=Learn-Android-Jetpack-Pro&color=blue&logo=github)](https://github.com/noranekoit/Learn-Android-Jetpack-Pro "Go to GitHub repo")
+
+by [@noranekoit](https://github.com/noranekoit)
+<br>
 This is My learning Repository at Dicoding and IDCamp2021 || Use this as study purpose
 
 
