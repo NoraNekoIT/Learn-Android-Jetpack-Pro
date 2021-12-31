@@ -5,8 +5,13 @@ by [@noranekoit](https://github.com/noranekoit)
 <br>
 This is My learning Repository at Dicoding and IDCamp2021 || Use this as study purpose
 
-
 I built an app with the name Moe . Moe is an application that displays the Movie Catalogue
+<br>
+
+# Moe App
+![Logo Moe](https://user-images.githubusercontent.com/58914195/147801416-2bcf79c8-b0e7-44d1-8032-bd5ecea80ef7.jpg) 
+
+
 ## Submission 1 | Architecture Component
   - Daftar film
     - Terdapat 2 (dua) halaman yang menampilkan daftar film (Movies dan TV Show) dengan jumlah minimal 10 item.
