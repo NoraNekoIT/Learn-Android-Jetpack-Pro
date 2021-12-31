@@ -39,6 +39,6 @@ I built an app with the name Moe . Moe is an application that displays the Movie
      - Menerapkan Pagination untuk mengatur data pada RecyclerView.
    - Unit Test
      - Menerapkan unit test pada fungsi yang ada pada kelas Repository dan ViewModel. 
-     Instrumentation Tests
+   - Instrumentation Tests
      - Menerapkan instrumentation test untuk memastikan fitur-fitur yang ada berjalan dengan semestinya.
      - Jika pada aplikasi terdapat proses asynchronous, maka Anda wajib menerapkan Idle Resources.
