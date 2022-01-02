@@ -3,7 +3,7 @@
 
 by [@noranekoit](https://github.com/noranekoit)
 
-- I am graduation this class on date  : `2 January 2022`
+- Graduation announcement on  : `2 January 2022` ❣️
 
 <br>
 This is My learning Repository at Dicoding and IDCamp2021 || Use this as study purpose
