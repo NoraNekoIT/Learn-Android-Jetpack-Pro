@@ -5,7 +5,6 @@ by [@noranekoit](https://github.com/noranekoit)
 
 - Graduation announcement on  : `2 January 2022` ❣️
 
-<br>
 This is My learning Repository at Dicoding and IDCamp2021 || Use this as study purpose
 - Submission 1 | Architecture Component
 - Submission 2 | Repository and LiveData
