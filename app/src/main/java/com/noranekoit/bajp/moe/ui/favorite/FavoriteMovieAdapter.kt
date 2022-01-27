@@ -3,17 +3,15 @@ package com.noranekoit.bajp.moe.ui.favorite
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.noranekoit.bajp.moe.BuildConfig
 import com.noranekoit.bajp.moe.R
 import com.noranekoit.bajp.moe.data.source.local.entity.MovieEntity
 import com.noranekoit.bajp.moe.databinding.ItemFavoriteBinding
 import com.noranekoit.bajp.moe.ui.detail.DetailActivity
+import com.noranekoit.bajp.moe.utils.loadImage
 
 class FavoriteMovieAdapter(private val callback: FavoriteMovieFragmentCallback) :
     PagedListAdapter<MovieEntity, FavoriteMovieAdapter.FavoriteViewHolder>(DIFF_CALLBACK) {
@@ -32,22 +30,11 @@ class FavoriteMovieAdapter(private val callback: FavoriteMovieFragmentCallback) 
                 }
                 imgShareMovie.setOnClickListener { callback.onShareClick(movie) }
                 movie.imagePath?.let {
+
                     imgPoster.loadImage("${BuildConfig.BASE_URL_IMAGE}${it}")
                 }
             }
         }
-    }
-
-    private fun ImageView.loadImage(url: String?) {
-        Glide.with(this.context)
-            .load(url)
-            .apply(
-                RequestOptions.placeholderOf(R.drawable.ic_loading)
-                    .override(500, 500)
-                    .error(R.drawable.ic_error)
-            )
-            .centerCrop()
-            .into(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {

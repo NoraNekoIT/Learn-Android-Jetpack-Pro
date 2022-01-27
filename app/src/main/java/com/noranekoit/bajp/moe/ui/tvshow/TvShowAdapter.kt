@@ -3,17 +3,15 @@ package com.noranekoit.bajp.moe.ui.tvshow
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.noranekoit.bajp.moe.BuildConfig
 import com.noranekoit.bajp.moe.R
 import com.noranekoit.bajp.moe.data.source.local.entity.TvEntity
 import com.noranekoit.bajp.moe.databinding.ItemsTvShowBinding
 import com.noranekoit.bajp.moe.ui.detail.DetailActivity
+import com.noranekoit.bajp.moe.utils.loadImage
 
 class TvShowAdapter(private val callback: TvShowFragmentCallback) :
     PagedListAdapter<TvEntity, TvShowAdapter.TvShowViewHolder>(DIFF_CALLBACK) {
@@ -51,18 +49,6 @@ class TvShowAdapter(private val callback: TvShowFragmentCallback) :
 
             }
         }
-    }
-
-    private fun ImageView.loadImage(url: String?) {
-        Glide.with(this.context)
-            .load(url)
-            .apply(
-                RequestOptions.placeholderOf(R.drawable.ic_loading)
-                .override(500, 500)
-                .error(R.drawable.ic_error)
-            )
-            .centerCrop()
-            .into(this)
     }
 
     companion object {

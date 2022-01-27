@@ -2,21 +2,17 @@ package com.noranekoit.bajp.moe.ui.movie
 
 
 import android.content.Intent
-import android.provider.SyncStateContract
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.noranekoit.bajp.moe.BuildConfig
 import com.noranekoit.bajp.moe.R
 import com.noranekoit.bajp.moe.data.source.local.entity.MovieEntity
 import com.noranekoit.bajp.moe.databinding.ItemsMovieBinding
 import com.noranekoit.bajp.moe.ui.detail.DetailActivity
-import java.lang.System.load
+import com.noranekoit.bajp.moe.utils.loadImage
 
 
 class MovieAdapter(private val callback: MovieFragmentCallback) :
@@ -56,17 +52,6 @@ class MovieAdapter(private val callback: MovieFragmentCallback) :
                 }
             }
         }
-    }
-
-    private fun ImageView.loadImage(url: String?) {
-        Glide.with(this.context)
-            .load(url)
-            .apply(RequestOptions.placeholderOf(R.drawable.ic_loading)
-                .override(500, 500)
-                .error(R.drawable.ic_error)
-            )
-            .centerCrop()
-            .into(this)
     }
 
     companion object {

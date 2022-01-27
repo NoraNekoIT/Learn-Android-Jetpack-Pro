@@ -40,11 +40,8 @@ class FavoriteFragment : Fragment(), FavoriteMovieFragmentCallback, FavoriteTvFr
             viewModel.getFavoriteMovie().observe(viewLifecycleOwner, { movies ->
                 binding?.progressBar?.visibility = View.GONE
                 movieAdapter.submitList(movies)
-                if (movies.size == 0) {
-                    binding?.textEmptyMovieFav?.visibility = View.VISIBLE
-                } else {
-                    binding?.textEmptyMovieFav?.visibility = View.GONE
-                }
+                if (movies.size == 0) binding?.textEmptyMovieFav?.visibility = View.VISIBLE
+                else binding?.textEmptyMovieFav?.visibility = View.GONE
 
             })
             binding?.rvMovieFavorite?.apply {
@@ -56,11 +53,9 @@ class FavoriteFragment : Fragment(), FavoriteMovieFragmentCallback, FavoriteTvFr
 
             viewModel.getFavoriteTvShow().observe(viewLifecycleOwner, { tvShows ->
                 tvAdapter.submitList(tvShows)
-                if (tvShows.size == 0) {
-                    binding?.textEmptyTvFav?.visibility = View.VISIBLE
-                } else {
-                    binding?.textEmptyTvFav?.visibility = View.GONE
-                }
+                if (tvShows.size == 0) binding?.textEmptyTvFav?.visibility = View.VISIBLE
+                else binding?.textEmptyTvFav?.visibility = View.GONE
+
 
             })
             binding?.rvTvFavorite?.apply {
